@@ -71,17 +71,21 @@ void Solver<Dtype>::Solve(const char* resume_file) {
   // very long time (param_.test_interval() training iterations) to report that
   // there's not enough memory to run the test net and crash, etc.; and to gauge
   // the effect of the first training iterations.
-  if (param_.test_interval()) {
-    Test();
-  }
+//  if (param_.test_interval()) {
+//    Test();
+//  }
 
   // For a network that is trained by the solver, no bottom or top vecs
   // should be given, and we will just provide dummy vecs.
   vector<Blob<Dtype>*> bottom_vec;
   while (iter_++ < param_.max_iter()) {
+LOG(INFO) << "ForwardBackward - ^^^^";
     Dtype loss = net_->ForwardBackward(bottom_vec);
+LOG(INFO) << "ForwardBackward - $$$$";
     ComputeUpdateValue();
+LOG(INFO) << "ComputeUpdateValue - $$$$";
     net_->Update();
+LOG(INFO) << "net_->Update() - $$$$";
 
     if (param_.display() && iter_ % param_.display() == 0) {
       LOG(INFO) << "Iteration " << iter_ << ", loss = " << loss;

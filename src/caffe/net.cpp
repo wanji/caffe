@@ -234,8 +234,10 @@ const vector<Blob<Dtype>*>& Net<Dtype>::Forward(
     const vector<Blob<Dtype>*> & bottom, Dtype* loss) {
   // Copy bottom to internal bottom
   for (int i = 0; i < bottom.size(); ++i) {
+LOG(INFO) << "forward-1-" << i;
     net_input_blobs_[i]->CopyFrom(*bottom[i]);
   }
+LOG(INFO) << "ForwardPrefilled - ^^^^";
   return ForwardPrefilled(loss);
 }
 
@@ -253,10 +255,13 @@ string Net<Dtype>::Forward(const string& input_blob_protos, Dtype* loss) {
   ForwardPrefilled(loss);
   blob_proto_vec.Clear();
   for (int i = 0; i < net_output_blobs_.size(); ++i) {
+LOG(INFO) << "forward-1-" << i;
     net_output_blobs_[i]->ToProto(blob_proto_vec.add_blobs());
   }
   string output;
+LOG(INFO) << "blob_proto_vec.SerializeToString - ^^^^";
   blob_proto_vec.SerializeToString(&output);
+LOG(INFO) << "blob_proto_vec.SerializeToString - $$$$";
   return output;
 }
 
@@ -265,9 +270,11 @@ template <typename Dtype>
 void Net<Dtype>::Backward() {
   for (int i = layers_.size() - 1; i >= 0; --i) {
     if (layer_need_backward_[i]) {
+LOG(INFO) << "backward-" << i;
       layers_[i]->Backward(top_vecs_[i], true, &bottom_vecs_[i]);
     }
   }
+LOG(INFO) << "Backward - $$$$";
 }
 
 template <typename Dtype>

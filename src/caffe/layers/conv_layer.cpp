@@ -111,6 +111,7 @@ Dtype ConvolutionLayer<Dtype>::Forward_cpu(const vector<Blob<Dtype>*>& bottom,
 template <typename Dtype>
 void ConvolutionLayer<Dtype>::Backward_cpu(const vector<Blob<Dtype>*>& top,
       const bool propagate_down, vector<Blob<Dtype>*>* bottom) {
+LOG(INFO) << "\t" << this->layer_param_.name() << "(cpu) - begin";
   const Dtype* top_diff = top[0]->cpu_diff();
   const Dtype* weight = this->blobs_[0]->cpu_data();
   Dtype* weight_diff = this->blobs_[0]->mutable_cpu_diff();
@@ -161,6 +162,7 @@ void ConvolutionLayer<Dtype>::Backward_cpu(const vector<Blob<Dtype>*>& top,
           stride_, bottom_diff + (*bottom)[0]->offset(n));
     }
   }
+LOG(INFO) << "\t" << this->layer_param_.name() << "(cpu) - end";
 }
 
 INSTANTIATE_CLASS(ConvolutionLayer);

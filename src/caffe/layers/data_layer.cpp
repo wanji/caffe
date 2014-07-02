@@ -246,7 +246,9 @@ void DataLayer<Dtype>::CreatePrefetchThread() {
 
 template <typename Dtype>
 void DataLayer<Dtype>::JoinPrefetchThread() {
+  LOG(INFO) << "Waiting for join ...";
   CHECK(!pthread_join(thread_, NULL)) << "Pthread joining failed.";
+  LOG(INFO) << "... Joined!";
 }
 
 template <typename Dtype>
@@ -262,15 +264,21 @@ Dtype DataLayer<Dtype>::Forward_cpu(const vector<Blob<Dtype>*>& bottom,
       vector<Blob<Dtype>*>* top) {
   // First, join the thread
   JoinPrefetchThread();
+LOG(INFO) << "caffe_copy - ^^^^";
   // Copy the data
   caffe_copy(prefetch_data_->count(), prefetch_data_->cpu_data(),
              (*top)[0]->mutable_cpu_data());
+LOG(INFO) << "caffe_copy - $$$$";
   if (output_labels_) {
+LOG(INFO) << "caffe_copy2 - ^^^^";
     caffe_copy(prefetch_label_->count(), prefetch_label_->cpu_data(),
                (*top)[1]->mutable_cpu_data());
+LOG(INFO) << "caffe_copy2 - $$$$";
   }
   // Start a new prefetch thread
+LOG(INFO) << "CreatePrefetchThread() - ^^^^";
   CreatePrefetchThread();
+LOG(INFO) << "CreatePrefetchThread() - $$$$";
   return Dtype(0.);
 }
 
